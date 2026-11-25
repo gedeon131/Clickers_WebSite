@@ -1,0 +1,45 @@
+---
+/**
+ * « Découvrez nos derniers articles » : les trois articles les plus récents.
+ */
+import PostCard from './PostCard.astro';
+import Button from '../ui/Button.astro';
+import Section from '../ui/Section.astro';
+import { getLocalizedEntries } from '../../lib/content';
+import { getLangFromUrl, getLocalizedPath, useTranslations } from '../../i18n/utils';
+
+interface Props {
+  /** Slug à exclure (article en cours de lecture). */
+  exclude?: string;
+  title?: string;
+}
+
+const { exclude, title } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const posts = (await getLocalizedEntries('blog', lang)).filter((p) => p.slug !== exclude).slice(0, 3);
+---
+
+{posts.length > 0 && (
+  <Section
+    id="blog"
+    tone="tint"
+    eyebrow={t('home.blog.eyebrow')}
+    title={title ?? t('home.blog.title')}
+    intro={title ? undefined : t('home.blog.intro')}
+  >
+    <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" role="list">
+      {posts.map((item, index) => (
+        <li>
+          <PostCard item={item} index={index} />
+        </li>
+      ))}
+    </ul>
+    <div class="mt-12">
+      <Button href={getLocalizedPath('blog', lang)} variant="primary">
+        {t('blog.all')}
+        <span aria-hidden="true">→</span>
+      </Button>
+    </div>
+  </Section>
+)}

@@ -28,3 +28,9 @@ Claude Code met cette liste à jour à chaque texte ou image provisoire ajouté.
 ## Technique (agence)
 - [ ] Webhook n8n / Make pour les formulaires, puis `PUBLIC_FORM_ENDPOINT` (en attendant, les formulaires renvoient vers l'e-mail)
 - [ ] Activer GitHub Pages (Settings > Pages > Source : GitHub Actions) pour la préversion
+
+## Ajouts inspirés de ddghaiti.com (24/11/2026)
+- [ ] Blog : 3 articles de départ rédigés par l'agence dans `src/content/blog/{fr,en}/` (`placeholder: true`), à valider ou remplacer
+- [ ] « Ils nous font confiance » : noms et logos des partenaires qui acceptent d'être cités (`partners` dans `src/config/site.ts`, logos dans `public/partenaires/`)
+- [ ] Avis clients : publier uniquement les avis réels reçus avec l'autorisation cochée (un fichier par avis dans `src/content/reviews/`)
+- [ ] Newsletter : choisir l'outil d'envoi (Brevo, Mailchimp…) et le brancher au webhook (`type: "newsletter"`)

@@ -1,0 +1,11 @@
+---
+import BlogPage from '../../../components/blog/BlogPage.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { useTranslations } from '../../../i18n/utils';
+
+const t = useTranslations('en');
+---
+
+<BaseLayout title={t('blog.title')} description={t('blog.description')}>
+  <BlogPage />
+</BaseLayout>

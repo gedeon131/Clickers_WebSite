@@ -17,6 +17,8 @@ export const routes = {
   about: { fr: '/a-propos', en: '/en/about' },
   services: { fr: '/services', en: '/en/services' },
   projects: { fr: '/projets', en: '/en/projects' },
+  blog: { fr: '/blog', en: '/en/blog' },
+  reviews: { fr: '/avis', en: '/en/reviews' },
   contact: { fr: '/contact', en: '/en/contact' },
   legal: { fr: '/mentions-legales', en: '/en/legal' },
   privacy: { fr: '/confidentialite', en: '/en/privacy' },

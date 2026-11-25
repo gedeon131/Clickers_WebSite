@@ -82,5 +82,22 @@ export const socialLinks: SocialLink[] = [
   { network: 'youtube', name: 'YouTube', href: '' },
 ];
 
+export interface Partner {
+  /** Libellé générique traduit (utilisé tant que le nom ne peut pas être cité). */
+  labelKey: string;
+  icon: 'public' | 'education' | 'creators';
+  /** Nom réel, à renseigner seulement avec l'accord du partenaire. */
+  name?: string;
+  /** Chemin d'un logo dans public/ (ex. '/partenaires/logo.svg'). */
+  logo?: string;
+}
+
+// TODO(client): fournir noms et logos des partenaires qui acceptent d'être cités (ex. le ministère)
+export const partners: Partner[] = [
+  { labelKey: 'trust.public', icon: 'public' },
+  { labelKey: 'trust.education', icon: 'education' },
+  { labelKey: 'trust.creators', icon: 'creators' },
+];
+
 /** Réseaux dont le lien est connu (pour le JSON-LD et les liens actifs). */
 export const activeSocialLinks = socialLinks.filter((s) => s.href);

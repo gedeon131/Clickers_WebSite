@@ -1,0 +1,53 @@
+---
+/**
+ * Page « Avis clients / évaluation finale », partagée par /avis et /en/reviews.
+ */
+import Testimonials from './Testimonials.astro';
+import ReviewForm from '../forms/ReviewForm.astro';
+import PageHeader from '../ui/PageHeader.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const reasons = [t('reviews.why.1'), t('reviews.why.2'), t('reviews.why.3')];
+---
+
+<PageHeader
+  eyebrow={t('reviews.eyebrow')}
+  title={t('reviews.heading')}
+  intro={t('reviews.intro')}
+  breadcrumbs={[{ label: t('reviews.title') }]}
+/>
+
+<section class="bg-paper" aria-labelledby="avis-titre">
+  <div class="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] gap-10 px-4 py-16 md:px-8 md:py-24 lg:grid-cols-12 lg:gap-12">
+    <aside class="lg:col-span-4">
+      <div class="rounded-xl bg-night-900 p-8 text-brand-100 md:p-10 lg:sticky lg:top-36">
+        <h2 class="text-2xl text-white">{t('reviews.why.title')}</h2>
+        <ul class="mt-8 space-y-6" role="list">
+          {reasons.map((reason, index) => (
+            <li class="flex gap-4">
+              <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-brand-700 to-accent-500 font-mono text-sm text-white">
+                {index + 1}
+              </span>
+              <p class="text-brand-100/85">{reason}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </aside>
+
+    <div class="lg:col-span-8">
+      <p class="mb-5 flex items-center gap-3 font-mono text-xs text-accent-700">
+        <span aria-hidden="true">//</span>{t('reviews.form.eyebrow')}
+      </p>
+      <h2 id="avis-titre" class="text-3xl leading-tight md:text-4xl">{t('reviews.form.title')}</h2>
+      <p class="mt-4 mb-10 text-muted">{t('reviews.form.intro')}</p>
+      <div class="rounded-xl bg-white p-6 shadow-sm shadow-night-900/5 md:p-10">
+        <ReviewForm labelledby="avis-titre" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<Testimonials showCta={false} />

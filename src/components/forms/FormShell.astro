@@ -6,12 +6,16 @@ import { contactEmail, formEndpoint } from '../../config/site';
 import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 
 interface Props {
-  type: 'contact' | 'devis';
+  type: 'contact' | 'devis' | 'avis' | 'newsletter';
   id: string;
   labelledby: string;
+  /** Message de succès propre au formulaire (par défaut : message générique). */
+  successMessage?: string;
+  /** Classes de mise en page (par défaut : grille deux colonnes). */
+  class?: string;
 }
 
-const { type, id, labelledby } = Astro.props;
+const { type, id, labelledby, successMessage, class: className } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
@@ -26,10 +30,10 @@ const t = useTranslations(lang);
   data-endpoint={formEndpoint}
   data-msg-invalid={t('form.invalid')}
   data-msg-sending={t('form.sending')}
-  data-msg-success={t('form.success')}
+  data-msg-success={successMessage ?? t('form.success')}
   data-msg-error={`${t('form.error')} ${contactEmail}`}
   data-msg-inactive={`${t('form.inactive')} ${contactEmail}`}
-  class="relative grid grid-cols-[minmax(0,1fr)] gap-6 md:grid-cols-2"
+  class:list={[className ?? 'relative grid grid-cols-[minmax(0,1fr)] gap-6 md:grid-cols-2']}
 >
   <slot />
 </form>

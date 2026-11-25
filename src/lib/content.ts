@@ -1,7 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { defaultLang, type Lang } from '../i18n/utils';
 
-type LocalizedCollection = 'services' | 'projects';
+type LocalizedCollection = 'services' | 'projects' | 'blog';
 
 export interface LocalizedEntry<C extends LocalizedCollection> {
   /** Identifiant commun aux deux langues (nom du fichier sans le dossier de langue). */

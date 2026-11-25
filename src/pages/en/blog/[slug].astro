@@ -1,0 +1,20 @@
+---
+import PostDetail from '../../../components/blog/PostDetail.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getLocalizedEntries, type LocalizedEntry } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  const posts = await getLocalizedEntries('blog', 'en');
+  return posts.map((item) => ({ params: { slug: item.slug }, props: { item } }));
+}
+
+interface Props {
+  item: LocalizedEntry<'blog'>;
+}
+
+const { item } = Astro.props;
+---
+
+<BaseLayout title={item.entry.data.title} description={item.entry.data.description}>
+  <PostDetail item={item} />
+</BaseLayout>

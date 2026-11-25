@@ -55,4 +55,37 @@ const legal = defineCollection({
   }),
 });
 
-export const collections = { services, projects, legal };
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    date: z.coerce.date(),
+    category: z.string(),
+    readingTime: z.number().default(4),
+    /** Tri : le plus petit en premier (mettre les articles récents en tête). */
+    order: z.number().default(0),
+    draft: z.boolean().default(false),
+    /** Article rédigé par l'agence, à valider par le client. */
+    placeholder: z.boolean().default(false),
+  }),
+});
+
+/**
+ * Avis clients validés pour publication (le client a coché l'autorisation dans le formulaire).
+ * Un fichier par avis ; le texte de l'avis est le corps du fichier. Ne jamais inventer d'avis.
+ */
+const reviews = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/reviews' }),
+  schema: z.object({
+    name: z.string(),
+    organization: z.string().optional(),
+    role: z.string().optional(),
+    project: z.string().optional(),
+    rating: z.number().int().min(1).max(5),
+    date: z.coerce.date(),
+    lang: z.enum(['fr', 'en']).default('fr'),
+  }),
+});
+
+export const collections = { services, projects, legal, blog, reviews };

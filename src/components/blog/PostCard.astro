@@ -1,0 +1,61 @@
+---
+/**
+ * Carte d'article de blog : visuel génératif (dégradé + icône de catégorie), catégorie, date, titre, extrait.
+ */
+import type { LocalizedEntry } from '../../lib/content';
+import { getDetailPath, getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+interface Props {
+  item: LocalizedEntry<'blog'>;
+  index: number;
+}
+
+const { item, index } = Astro.props;
+const { slug, entry, fallback } = item;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const date = new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : 'en-GB', { dateStyle: 'long' }).format(
+  entry.data.date,
+);
+const gradients = [
+  'from-brand-700 to-accent-500',
+  'from-night-800 to-brand-700',
+  'from-accent-700 to-brand-500',
+];
+---
+
+<article
+  data-reveal
+  lang={fallback ? 'fr' : undefined}
+  class="group relative flex h-full flex-col overflow-hidden rounded-xl border border-brand-100 bg-white shadow-sm shadow-night-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-brand-700/10"
+  style={`transition-delay: ${(index % 3) * 80}ms`}
+>
+  <div
+    class:list={[
+      'relative flex aspect-[16/9] items-end overflow-hidden bg-linear-to-br p-6',
+      gradients[index % gradients.length],
+    ]}
+    aria-hidden="true"
+  >
+    <div class="bg-dots absolute inset-0 opacity-60"></div>
+    <span class="relative font-mono text-sm text-white/90">{`// ${entry.data.category}`}</span>
+    <span class="absolute -right-6 -bottom-10 font-display text-[9rem] leading-none font-bold text-white/10 transition-transform duration-500 group-hover:scale-110">
+      {String(index + 1).padStart(2, '0')}
+    </span>
+  </div>
+  <div class="flex flex-1 flex-col p-6 md:p-7">
+    <p class="font-mono text-xs text-muted">
+      <time datetime={entry.data.date.toISOString()}>{date}</time>
+      {` · ${entry.data.readingTime} ${t('blog.minutes')}`}
+    </p>
+    <h3 class="mt-3 text-xl leading-snug">
+      <a href={getDetailPath('blog', slug, lang)} class="no-underline after:absolute after:inset-0">
+        {entry.data.title}
+      </a>
+    </h3>
+    <p class="mt-3 flex-1 text-muted">{entry.data.description}</p>
+    <p class="mt-5 text-sm font-semibold text-brand-700" aria-hidden="true">
+      {t('blog.read')} <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+    </p>
+  </div>
+</article>

@@ -2,6 +2,9 @@
 /**
  * Contenu de la page d'accueil, partagé par / et /en/ (la langue vient de l'URL).
  */
+import LatestPosts from '../blog/LatestPosts.astro';
+import Newsletter from '../forms/Newsletter.astro';
+import Testimonials from '../reviews/Testimonials.astro';
 import Approach from '../services/Approach.astro';
 import CallToAction from '../ui/CallToAction.astro';
 import FeaturedProjects from './FeaturedProjects.astro';
@@ -10,13 +13,18 @@ import Hero from './Hero.astro';
 import Markets from './Markets.astro';
 import Strengths from './Strengths.astro';
 import TechSection from './TechSection.astro';
+import TrustBand from './TrustBand.astro';
 ---
 
 <Hero />
+<TrustBand />
 <Strengths />
 <FeaturedServices />
 <Approach tone="paper" />
 <TechSection />
 <Markets />
 <FeaturedProjects />
+<Testimonials tone="paper" />
+<LatestPosts />
 <CallToAction />
+<Newsletter />

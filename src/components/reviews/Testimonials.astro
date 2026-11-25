@@ -1,0 +1,93 @@
+---
+/**
+ * Témoignages clients publiés (collection `reviews`). Sans avis publié, la section invite
+ * les clients à évaluer leur projet : aucun avis fictif n'est affiché.
+ */
+import { getCollection, render } from 'astro:content';
+import Button from '../ui/Button.astro';
+import Section from '../ui/Section.astro';
+import { getLangFromUrl, getLocalizedPath, useTranslations } from '../../i18n/utils';
+
+interface Props {
+  tone?: 'paper' | 'tint';
+  /** Masque le bouton « Donner mon avis » (sur la page Avis elle-même). */
+  showCta?: boolean;
+}
+
+const { tone = 'tint', showCta = true } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const reviews = (await getCollection('reviews'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 6);
+const items = await Promise.all(
+  reviews.map(async (review) => ({ review, Content: (await render(review)).Content })),
+);
+---
+
+<Section
+  id="temoignages"
+  tone={tone}
+  eyebrow={t('reviews.list.eyebrow')}
+  title={t('reviews.list.title')}
+>
+  {items.length > 0 ? (
+    <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" role="list">
+      {items.map(({ review, Content }, index) => (
+        <li
+          data-reveal
+          lang={review.data.lang}
+          class="flex flex-col rounded-xl border border-brand-100 bg-white p-7 shadow-sm shadow-night-900/5"
+          style={`transition-delay: ${(index % 3) * 80}ms`}
+        >
+          <p class="flex gap-1 text-accent-500" aria-label={`${review.data.rating} ${t('reviews.rating')}`}>
+            {[1, 2, 3, 4, 5].map((n) => (
+              <svg
+                class:list={['size-5', n > review.data.rating && 'text-steel-300']}
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z" />
+              </svg>
+            ))}
+          </p>
+          <blockquote class="mt-5 flex-1 text-text">
+            <Content />
+          </blockquote>
+          <footer class="mt-6 border-t border-brand-100 pt-4">
+            <p class="font-display font-semibold text-brand-700">{review.data.name}</p>
+            {(review.data.role || review.data.organization) && (
+              <p class="text-sm text-muted">
+                {[review.data.role, review.data.organization].filter(Boolean).join(', ')}
+              </p>
+            )}
+          </footer>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <div
+      data-reveal
+      class="flex flex-col items-start gap-6 rounded-xl border border-dashed border-brand-700/25 bg-white/70 p-8 md:flex-row md:items-center md:justify-between md:p-10"
+    >
+      <div class="flex items-center gap-5">
+        <p class="flex gap-1 text-accent-500" aria-hidden="true">
+          {[1, 2, 3, 4, 5].map(() => (
+            <svg class="size-6" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z" />
+            </svg>
+          ))}
+        </p>
+        <p class="max-w-xl text-muted md:text-lg">{t('reviews.list.empty')}</p>
+      </div>
+      {showCta && (
+        <Button href={getLocalizedPath('reviews', lang)} variant="accent">
+          {t('reviews.list.cta')}
+          <span aria-hidden="true">→</span>
+        </Button>
+      )}
+    </div>
+  )}
+</Section>

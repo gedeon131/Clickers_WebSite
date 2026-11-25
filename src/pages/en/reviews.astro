@@ -1,0 +1,11 @@
+---
+import ReviewsPage from '../../components/reviews/ReviewsPage.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { useTranslations } from '../../i18n/utils';
+
+const t = useTranslations('en');
+---
+
+<BaseLayout title={t('reviews.title')} description={t('reviews.description')}>
+  <ReviewsPage />
+</BaseLayout>

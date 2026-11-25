@@ -18,6 +18,8 @@ We only collect the data you choose to send us:
 
 - through the **contact form**: name, email address, phone (optional), organisation (optional), subject and message;
 - through the **quote request form**: organisation, type of organisation, service required, context, indicative budget, timeframe, name, email address and phone (optional);
+- through the **evaluation form (client reviews)**: name, organisation and job title (optional), email address, project, ratings, recommendation and comments. Your review is only published on the website if you tick the publication consent box;
+- through the **newsletter sign-up**: email address. You can unsubscribe at any time;
 - when you write to us by **email** or on **WhatsApp**. WhatsApp conversations are also subject to that service's privacy policy.
 
 ## Purposes and legal basis

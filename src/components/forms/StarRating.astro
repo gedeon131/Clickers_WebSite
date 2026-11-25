@@ -1,0 +1,88 @@
+---
+/**
+ * Notation de 1 à 5 étoiles, accessible et sans JavaScript : un groupe de boutons radio
+ * (flèches du clavier) stylé en étoiles. Les étoiles se remplissent au survol et à la sélection.
+ */
+import { getLangFromUrl, useTranslations, type UiKey } from '../../i18n/utils';
+
+interface Props {
+  name: string;
+  legend: string;
+  idPrefix: string;
+  required?: boolean;
+  /** Grande taille (note globale) ou compacte (critères). */
+  size?: 'lg' | 'sm';
+  class?: string;
+}
+
+const { name, legend, idPrefix, required = false, size = 'sm', class: className } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const stars = [1, 2, 3, 4, 5];
+---
+
+<fieldset class:list={['star-rating', className]}>
+  <legend class:list={['mb-2 font-medium text-brand-700', size === 'lg' ? 'text-base' : 'text-sm']}>
+    {legend}
+    {required && (
+      <span class="text-accent-700" aria-hidden="true">
+        {' '}
+        *
+      </span>
+    )}
+  </legend>
+  <div class="flex items-center">
+    <div class="stars flex flex-row-reverse justify-end gap-1">
+      {[...stars].reverse().map((n) => (
+        <>
+          <input
+            type="radio"
+            id={`${idPrefix}-${name}-${n}`}
+            name={name}
+            value={String(n)}
+            required={required}
+            class="sr-only"
+          />
+          <label
+            for={`${idPrefix}-${name}-${n}`}
+            class:list={[
+              'star cursor-pointer text-steel-300 transition-colors',
+              size === 'lg' ? 'size-10' : 'size-7',
+            ]}
+            title={t(`form.score.${n}` as UiKey)}
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" class="size-full" aria-hidden="true">
+              <path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z" />
+            </svg>
+            <span class="sr-only">
+              {`${t('form.rating.star').replace('{n}', String(n))} : ${t(`form.score.${n}` as UiKey)}`}
+            </span>
+          </label>
+        </>
+      ))}
+    </div>
+  </div>
+</fieldset>
+
+<style>
+  /* Les étoiles sont en ordre inverse dans le DOM (5 → 1) : « ~ » colore toutes celles de gauche */
+  .stars input:checked ~ label,
+  .stars label:hover,
+  .stars label:hover ~ label {
+    color: var(--color-accent-500);
+  }
+
+  .stars:hover input:checked ~ label:not(:hover, :hover ~ label) {
+    color: var(--color-steel-300);
+  }
+
+  .stars input:focus-visible + label {
+    outline: 2px solid var(--color-accent-500);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  form[data-submitted] .star-rating:has(input:required:invalid) legend {
+    color: var(--color-accent-700);
+  }
+</style>

@@ -18,6 +18,8 @@ Nous collectons uniquement les données que vous nous transmettez volontairement
 
 - via le **formulaire de contact** : nom, adresse e-mail, téléphone (facultatif), organisation (facultatif), objet et contenu de votre message ;
 - via le **formulaire de demande de devis** : organisation, type de structure, service souhaité, contexte, budget indicatif, échéance, nom, adresse e-mail et téléphone (facultatif) ;
+- via le **formulaire d'évaluation (avis clients)** : nom, organisation et fonction (facultatifs), adresse e-mail, projet concerné, notes, recommandation et commentaire. L'avis n'est publié sur le site que si vous cochez l'autorisation de publication ;
+- via l'**inscription à la newsletter** : adresse e-mail. Vous pouvez vous désabonner à tout moment ;
 - lorsque vous nous écrivez par **e-mail** ou sur **WhatsApp**. Les échanges sur WhatsApp sont également soumis à la politique de confidentialité de ce service.
 
 ## Finalités et base légale

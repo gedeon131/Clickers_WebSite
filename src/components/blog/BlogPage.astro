@@ -1,0 +1,35 @@
+---
+/**
+ * Liste des articles, partagée par /blog et /en/blog.
+ */
+import PostCard from './PostCard.astro';
+import Newsletter from '../forms/Newsletter.astro';
+import PageHeader from '../ui/PageHeader.astro';
+import { getLocalizedEntries } from '../../lib/content';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const posts = await getLocalizedEntries('blog', lang);
+---
+
+<PageHeader
+  eyebrow={t('blog.eyebrow')}
+  title={t('blog.heading')}
+  intro={t('blog.intro')}
+  breadcrumbs={[{ label: t('blog.title') }]}
+/>
+
+<section class="bg-paper">
+  <div class="mx-auto max-w-7xl px-4 py-16 md:px-8 md:py-24">
+    <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" role="list">
+      {posts.map((item, index) => (
+        <li>
+          <PostCard item={item} index={index} />
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<Newsletter />

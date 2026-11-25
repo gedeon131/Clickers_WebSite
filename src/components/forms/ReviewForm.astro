@@ -1,0 +1,124 @@
+---
+/**
+ * Formulaire d'évaluation finale d'un projet (avis client) : note globale, critères détaillés,
+ * recommandation, commentaire et autorisation de publication. Envoyé au webhook avec `type: "avis"`.
+ */
+import FormField from './FormField.astro';
+import FormFooter from './FormFooter.astro';
+import FormShell from './FormShell.astro';
+import StarRating from './StarRating.astro';
+import { getLocalizedEntries } from '../../lib/content';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+interface Props {
+  labelledby: string;
+}
+
+const { labelledby } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const p = 'avis';
+
+const projects = await getLocalizedEntries('projects', lang);
+const services = await getLocalizedEntries('services', lang);
+const projectOptions = [
+  { value: '', label: t('form.select') },
+  ...projects.map(({ slug, entry }) => ({ value: `projet:${slug}`, label: entry.data.title })),
+  ...services.map(({ slug, entry }) => ({ value: `service:${slug}`, label: entry.data.title })),
+  { value: 'autre', label: t('form.structure.other') },
+];
+
+const criteria = [
+  { name: 'qualite', label: t('form.criteria.quality') },
+  { name: 'delais', label: t('form.criteria.deadlines') },
+  { name: 'communication', label: t('form.criteria.communication') },
+  { name: 'rapport-qualite-prix', label: t('form.criteria.value') },
+];
+
+const recommend = [
+  { value: 'oui', label: t('form.recommend.yes') },
+  { value: 'peut-etre', label: t('form.recommend.maybe') },
+  { value: 'non', label: t('form.recommend.no') },
+];
+---
+
+<FormShell type="avis" id="formulaire-avis" labelledby={labelledby} successMessage={t('form.successReview')}>
+  <FormField idPrefix={p} name="name" label={t('form.name')} required autocomplete="name" />
+  <FormField
+    idPrefix={p}
+    name="organization"
+    label={t('form.organizationOptional')}
+    autocomplete="organization"
+  />
+  <FormField idPrefix={p} name="role" label={t('form.role')} autocomplete="organization-title" />
+  <FormField
+    idPrefix={p}
+    name="email"
+    type="email"
+    label={t('form.email')}
+    required
+    autocomplete="email"
+  />
+  <FormField
+    idPrefix={p}
+    name="project"
+    type="select"
+    label={t('form.project')}
+    required
+    options={projectOptions}
+    class="md:col-span-2"
+  />
+
+  <div class="rounded-xl border border-brand-100 bg-brand-100/40 p-5 md:col-span-2 md:p-6">
+    <StarRating idPrefix={p} name="rating" legend={t('form.rating')} required size="lg" />
+  </div>
+
+  <fieldset class="md:col-span-2">
+    <legend class="mb-4 font-display text-lg font-semibold text-brand-700">{t('form.criteria')}</legend>
+    <div class="grid gap-5 sm:grid-cols-2">
+      {criteria.map(({ name, label }) => (
+        <StarRating idPrefix={p} name={name} legend={label} />
+      ))}
+    </div>
+  </fieldset>
+
+  <fieldset class="md:col-span-2">
+    <legend class="mb-3 text-sm font-medium text-brand-700">
+      {t('form.recommend')}
+      <span class="text-accent-700" aria-hidden="true"> *</span>
+    </legend>
+    <div class="flex flex-wrap gap-3">
+      {recommend.map(({ value, label }) => (
+        <label class="cursor-pointer">
+          <input type="radio" name="recommend" value={value} required class="peer sr-only" />
+          <span class="inline-flex rounded-lg border border-brand-700/20 bg-white px-5 py-2.5 text-sm font-medium text-text transition-colors peer-checked:border-brand-700 peer-checked:bg-brand-700 peer-checked:text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent-500 hover:border-brand-700/50">
+            {label}
+          </span>
+        </label>
+      ))}
+    </div>
+  </fieldset>
+
+  <FormField
+    idPrefix={p}
+    name="review"
+    type="textarea"
+    label={t('form.review')}
+    required
+    rows={5}
+    class="md:col-span-2"
+  />
+
+  <div class="flex items-start gap-3 md:col-span-2">
+    <input
+      id={`${p}-publish`}
+      name="publish"
+      type="checkbox"
+      value="oui"
+      class="mt-1 size-4 shrink-0 accent-brand-700"
+    />
+    <label for={`${p}-publish`} class="text-sm text-muted">{t('form.publish')}</label>
+  </div>
+
+  <FormFooter idPrefix={p} submitLabel={t('form.submitReview')} />
+</FormShell>

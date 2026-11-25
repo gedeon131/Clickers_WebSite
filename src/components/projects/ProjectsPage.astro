@@ -4,6 +4,7 @@
  */
 import ProjectCard from './ProjectCard.astro';
 import Markets from '../home/Markets.astro';
+import Testimonials from '../reviews/Testimonials.astro';
 import CallToAction from '../ui/CallToAction.astro';
 import PageHeader from '../ui/PageHeader.astro';
 import Section from '../ui/Section.astro';
@@ -32,6 +33,8 @@ const projects = await getLocalizedEntries('projects', lang);
   </ul>
   <!-- TODO(client): ajouter captures d'écran et logos partenaires quand ils seront disponibles -->
 </Section>
+
+<Testimonials tone="tint" />
 
 <Markets />
 
