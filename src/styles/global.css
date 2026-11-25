@@ -1,0 +1,191 @@
+@import 'tailwindcss';
+
+@import '@fontsource-variable/sora';
+@import '@fontsource-variable/inter';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
+/* Charte Clickers Community (CLAUDE.md §4) : bleu roi et violet du « C » du logo, gris des barres */
+@theme {
+  --color-night-900: #070b24;
+  --color-night-800: #0e1538;
+  --color-brand-700: #1236e0;
+  --color-brand-500: #3355f5;
+  --color-brand-300: #8fa3ff;
+  --color-brand-100: #e9edff;
+  --color-accent-700: #4b2fd1;
+  --color-accent-500: #6b55f5;
+  --color-accent-300: #b4a9ff;
+  --color-steel-300: #c9cad1;
+  --color-steel-500: #9c9da6;
+  --color-steel-700: #6f6e7b;
+  --color-success-300: #4ade80;
+  --color-success-700: #15803d;
+  --color-success-100: #dcfce7;
+  --color-ink: #04061a;
+  --color-paper: #f8f9fd;
+  --color-text: #151b36;
+  --color-muted: #565e78;
+
+  --font-display: 'Sora Variable', 'Sora', system-ui, sans-serif;
+  --font-sans: 'Inter Variable', 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+}
+
+@layer components {
+  /* Bouton principal : dégradé bleu → violet, comme l'arc du logo */
+  .btn-gradient {
+    background-image: linear-gradient(
+      100deg,
+      var(--color-brand-700) 0%,
+      var(--color-accent-500) 55%,
+      var(--color-brand-700) 100%
+    );
+    background-size: 200% 100%;
+    background-position: 0% 0;
+    transition:
+      background-position 0.4s ease,
+      box-shadow 0.3s ease;
+
+    &:hover {
+      background-position: 100% 0;
+      box-shadow: 0 8px 24px -8px color-mix(in srgb, var(--color-accent-500) 70%, transparent);
+    }
+  }
+
+  /* Mot mis en avant dans un titre sur fond sombre */
+  .text-gradient {
+    background-image: linear-gradient(90deg, var(--color-brand-300), var(--color-accent-300));
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  /* Trame de points discrète (fonds sombres) */
+  .bg-dots {
+    background-image: radial-gradient(
+      color-mix(in srgb, var(--color-brand-300) 22%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+  }
+
+  /* Texte long issu du Markdown (pages de détail, pages légales) */
+  .prose-site {
+    @apply text-base text-text md:text-lg;
+
+    & > * + * {
+      @apply mt-5;
+    }
+
+    & h2 {
+      @apply mt-12 font-display text-2xl leading-tight font-semibold text-brand-700 md:text-3xl;
+    }
+
+    & h3 {
+      @apply mt-8 text-lg font-semibold text-brand-700;
+    }
+
+    & ul {
+      @apply space-y-3 pl-0;
+    }
+
+    & ul > li {
+      @apply relative pl-7;
+    }
+
+    & ul > li::before {
+      content: '';
+      @apply absolute top-[0.65em] left-0 size-2 rounded-xs bg-linear-to-br from-brand-700 to-accent-500;
+    }
+
+    & a {
+      @apply text-brand-700 underline decoration-accent-500 underline-offset-4 hover:text-accent-700;
+    }
+
+    & strong {
+      @apply font-semibold text-brand-700;
+    }
+  }
+}
+
+/* Apparition en cascade des étiquettes de la boîte à outils (TechStack) */
+@keyframes chip-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.tech-chip {
+  animation: chip-in 0.35s ease-out both;
+}
+
+/* Champs invalides signalés seulement après une tentative d'envoi */
+form[data-submitted] :is(input, select, textarea):invalid {
+  border-color: var(--color-accent-700);
+  box-shadow: 0 0 0 1px var(--color-accent-700);
+}
+
+@layer base {
+  html {
+    @apply bg-paper font-sans text-text antialiased;
+  }
+
+  body {
+    line-height: 1.65;
+  }
+
+  h1,
+  h2 {
+    @apply font-display font-semibold text-brand-700;
+    letter-spacing: -0.02em;
+  }
+
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display font-semibold text-brand-700;
+    letter-spacing: -0.01em;
+  }
+
+  a {
+    @apply text-brand-700;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent-500;
+  }
+
+  /* Apparition douce au défilement (la classe .js est posée par BaseLayout ;
+     sans JavaScript, le contenu reste visible) */
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 0.7s ease-out,
+      transform 0.7s ease-out;
+  }
+
+  .js [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .js [data-reveal] {
+      opacity: 1;
+      transform: none;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

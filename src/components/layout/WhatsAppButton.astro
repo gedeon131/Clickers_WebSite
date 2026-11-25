@@ -1,0 +1,39 @@
+---
+import { getWhatsAppHref } from '../../config/site';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+interface Props {
+  /** Message prérempli (adapté à la page). */
+  message: string;
+}
+
+const { message } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const href = getWhatsAppHref(message);
+---
+
+{href && (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label={t('whatsapp.label')}
+    title={t('whatsapp.label')}
+    class="fixed right-4 bottom-4 z-30 hidden size-14 items-center justify-center rounded-full btn-gradient text-white shadow-lg shadow-brand-700/40 ring-1 ring-white/20 md:right-6 md:bottom-6 md:inline-flex"
+  >
+    <svg
+      class="size-7"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M3.5 20.5l1.3-4.2A8.5 8.5 0 1 1 8 19.4z" />
+      <path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-1.8-1-1 .8a4 4 0 0 1-2.3-2.3l.8-1-1-1.8z" />
+    </svg>
+  </a>
+)}

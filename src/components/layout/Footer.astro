@@ -1,0 +1,112 @@
+---
+import LogoMark from '../ui/LogoMark.astro';
+import SocialLinks from '../ui/SocialLinks.astro';
+import { contactEmail, getWhatsAppHref, phoneDisplay, phoneHref } from '../../config/site';
+import {
+  getLangFromUrl,
+  getLocalizedPath,
+  useTranslations,
+  type RouteKey,
+  type UiKey,
+} from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+const whatsappHref = getWhatsAppHref(t('whatsapp.message'));
+
+const siteLinks: { key: RouteKey; label: UiKey }[] = [
+  { key: 'home', label: 'nav.home' },
+  { key: 'about', label: 'nav.about' },
+  { key: 'services', label: 'nav.services' },
+  { key: 'projects', label: 'nav.projects' },
+  { key: 'contact', label: 'nav.contact' },
+];
+
+const legalLinks: { key: RouteKey; label: UiKey }[] = [
+  { key: 'legal', label: 'nav.legal' },
+  { key: 'privacy', label: 'nav.privacy' },
+];
+
+const headingClass = 'mb-4 font-mono text-xs font-medium text-accent-300';
+const linkClass = 'text-sm text-brand-100/85 no-underline transition-colors hover:text-white';
+---
+
+<footer class="relative isolate overflow-hidden bg-night-900 text-brand-100">
+  <div class="h-px bg-linear-to-r from-brand-700 via-accent-300 to-brand-700 opacity-70" aria-hidden="true">
+  </div>
+  <div
+    class="absolute -top-40 left-1/2 -z-10 size-[40rem] -translate-x-1/2 rounded-full bg-brand-700/15 blur-3xl"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-2 md:px-8 lg:grid-cols-[1.4fr_0.8fr_1.2fr_0.8fr]">
+    <div>
+      <div class="flex items-center gap-3">
+        <LogoMark class="size-12" />
+        <p class="font-display text-xl font-bold tracking-tight text-white">{t('site.name')}</p>
+      </div>
+      <p class="mt-5 font-display text-lg text-gradient">{t('site.tagline')}</p>
+      <p class="mt-4 max-w-sm text-sm leading-relaxed text-brand-100/75">{t('footer.description')}</p>
+      <h2 class:list={[headingClass, 'mt-8 font-mono']}>{`// ${t('footer.social')}`}</h2>
+      <SocialLinks />
+    </div>
+
+    <nav aria-label={t('footer.nav')}>
+      <h2 class:list={[headingClass, 'font-mono']}>{`// ${t('footer.nav')}`}</h2>
+      <ul class="space-y-2.5">
+        {siteLinks.map(({ key, label }) => (
+          <li>
+            <a href={getLocalizedPath(key, lang)} class={linkClass}>
+              {t(label)}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class:list={[headingClass, 'font-mono']}>{`// ${t('footer.contact')}`}</h2>
+      <ul class="space-y-2.5">
+        <li>
+          <a href={`mailto:${contactEmail}`} class:list={[linkClass, 'break-all']}>
+            {contactEmail}
+          </a>
+        </li>
+        <li>
+          <a href={phoneHref} class={linkClass}>
+            {phoneDisplay}
+          </a>
+        </li>
+        {whatsappHref && (
+          <li>
+            <a href={whatsappHref} target="_blank" rel="noopener noreferrer" class={linkClass}>
+              WhatsApp <span aria-hidden="true">↗</span>
+            </a>
+          </li>
+        )}
+      </ul>
+    </div>
+
+    <nav aria-label={t('footer.legal')}>
+      <h2 class:list={[headingClass, 'font-mono']}>{`// ${t('footer.legal')}`}</h2>
+      <ul class="space-y-2.5">
+        {legalLinks.map(({ key, label }) => (
+          <li>
+            <a href={getLocalizedPath(key, lang)} class={linkClass}>
+              {t(label)}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+
+  <div class="border-t border-brand-300/10">
+    <div class="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-xs text-brand-100/65 sm:flex-row sm:justify-between md:px-8">
+      <p>{`© ${year} ${t('site.name')}. ${t('footer.rights')}`}</p>
+      <p class="font-mono">{t('site.motto')}</p>
+    </div>
+  </div>
+</footer>

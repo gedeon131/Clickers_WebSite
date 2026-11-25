@@ -1,0 +1,27 @@
+---
+import Button from '../ui/Button.astro';
+import Section from '../ui/Section.astro';
+import ServiceList from '../services/ServiceList.astro';
+import { getLocalizedEntries } from '../../lib/content';
+import { getLangFromUrl, getLocalizedPath, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const services = await getLocalizedEntries('services', lang);
+---
+
+<Section
+  id="services"
+  tone="tint"
+  eyebrow={t('home.services.eyebrow')}
+  title={t('home.services.title')}
+  intro={t('home.services.intro')}
+>
+  <ServiceList items={services} tone="tint" />
+  <div class="mt-12">
+    <Button href={getLocalizedPath('services', lang)} variant="primary">
+      {t('home.services.all')}
+      <span aria-hidden="true">→</span>
+    </Button>
+  </div>
+</Section>

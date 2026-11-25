@@ -1,0 +1,103 @@
+---
+/**
+ * Page de détail d'un service, partagée par /services/[slug] et /en/services/[slug].
+ */
+import { render } from 'astro:content';
+import ServiceList from './ServiceList.astro';
+import Button from '../ui/Button.astro';
+import PageHeader from '../ui/PageHeader.astro';
+import Section from '../ui/Section.astro';
+import ServiceIcon from '../ui/ServiceIcon.astro';
+import { getBookingLink } from '../../config/site';
+import { getLocalizedEntries, type LocalizedEntry } from '../../lib/content';
+import { getLangFromUrl, getLocalizedPath, useTranslations } from '../../i18n/utils';
+
+interface Props {
+  item: LocalizedEntry<'services'>;
+}
+
+const { item } = Astro.props;
+const { entry, fallback } = item;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const { Content } = await render(entry);
+const others = (await getLocalizedEntries('services', lang)).filter((s) => s.slug !== item.slug);
+const contact = getLocalizedPath('contact', lang);
+---
+
+<PageHeader
+  eyebrow={t('services.eyebrow')}
+  title={entry.data.title}
+  intro={entry.data.summary}
+  breadcrumbs={[
+    { label: t('services.title'), href: getLocalizedPath('services', lang) },
+    { label: entry.data.title },
+  ]}
+>
+  {fallback && (
+    <p lang="fr" class="mt-6 text-sm text-brand-100/70 italic">
+      {t('content.fallback')}
+    </p>
+  )}
+</PageHeader>
+
+<section class="bg-paper">
+  <div class="mx-auto grid max-w-7xl gap-12 px-4 py-16 md:px-8 md:py-24 lg:grid-cols-12 lg:gap-16">
+    <article class="prose-site lg:col-span-7" lang={fallback ? 'fr' : undefined}>
+      <Content />
+    </article>
+
+    <aside class="lg:col-span-5">
+      <div class="relative overflow-hidden rounded-xl bg-night-900 p-8 text-brand-100 md:p-10 lg:sticky lg:top-36">
+        <span class="flex size-12 items-center justify-center rounded-lg bg-linear-to-br from-brand-700 to-accent-500 text-white">
+          <ServiceIcon name={entry.data.icon} class="size-6" />
+        </span>
+        {entry.data.tags.length > 0 && (
+          <>
+            <p class="mt-8 font-mono text-xs text-accent-300">{`// ${t('service.tech')}`}</p>
+            <ul class="mt-3 flex flex-wrap gap-2" role="list">
+              {entry.data.tags.map((tag) => (
+                <li class="rounded-md border border-brand-300/25 bg-night-800 px-3 py-1.5 font-mono text-xs text-brand-100">
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        <h2 class="mt-8 text-2xl leading-snug text-white">{t('service.aside.title')}</h2>
+        <p class="mt-4 text-brand-100/85">{t('service.aside.text')}</p>
+        <div class="mt-8 flex flex-col gap-3">
+          <Button
+            {...getBookingLink(t('home.cta.primary'), t('booking.newTab'), contact)}
+            variant="accent"
+            size="lg"
+          >
+            {t('home.cta.primary')}
+            <span aria-hidden="true">→</span>
+          </Button>
+          <Button href={`${contact}#devis`} variant="outline-light" size="lg">
+            {t('home.cta.secondary')}
+          </Button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+{others.length > 0 && (
+  <Section
+    id="autres-services"
+    tone="tint"
+    eyebrow={t('services.eyebrow')}
+    title={t('service.others')}
+    intro={t('service.others.intro')}
+  >
+    <ServiceList items={others} tone="tint" />
+    <div class="mt-12">
+      <Button href={getLocalizedPath('services', lang)} variant="primary">
+        {t('service.back')}
+        <span aria-hidden="true">→</span>
+      </Button>
+    </div>
+  </Section>
+)}

@@ -1,0 +1,46 @@
+---
+/**
+ * Icône d'un domaine d'intervention (trait 1.5, couleur : currentColor).
+ */
+import type { serviceIcons } from '../../content.config';
+
+type IconName = (typeof serviceIcons)[number];
+
+interface Props {
+  name: IconName;
+  class?: string;
+}
+
+const { name, class: className } = Astro.props;
+
+const paths: Record<IconName, string> = {
+  // Fenêtre de code
+  software: 'M3 5h18v14H3zM3 9h18M8 13l-2 2 2 2M12 17l2-4M16 13l2 2-2 2',
+  // Cylindre de base de données
+  database:
+    'M12 3c4.4 0 8 1.3 8 3s-3.6 3-8 3-8-1.3-8-3 3.6-3 8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3',
+  // Prises reliées
+  api: 'M7 7h4v4H7zM13 13h4v4h-4zM11 9h2a2 2 0 0 1 2 2v2M9 3v4M3 9h4M15 21v-4M21 15h-4',
+  // Flux de données vers un graphique
+  data: 'M3 20h18M6 16v-4M10 16V8M14 16v-6M18 16V5M5 8l4-3 4 3 6-5',
+  // Écran et téléphone
+  web: 'M2 4h15v11H2zM6 19h7M9.5 15v4M17 9h5v12h-5zM19 18h1',
+  // Puce / cerveau artificiel
+  ai: 'M7 7h10v10H7zM10 10h4v4h-4zM10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4',
+  // Toque / formation
+  training: 'M2 9l10-5 10 5-10 5zM6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5M22 9v6',
+};
+---
+
+<svg
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class={className}
+  aria-hidden="true"
+>
+  <path d={paths[name]} />
+</svg>

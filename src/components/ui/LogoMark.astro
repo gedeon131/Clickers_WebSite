@@ -1,0 +1,55 @@
+---
+/**
+ * Emblème Clickers Community, redessiné en SVG d'après le logo du document de présentation :
+ * arc « C » en dégradé bleu → violet, trois barres grises croissantes et flèche de croissance bleue.
+ * TODO(client): faire valider ce tracé, ou le remplacer par le logo vectoriel officiel.
+ */
+interface Props {
+  class?: string;
+  /** Texte alternatif ; vide = décoratif (quand le nom est écrit à côté). */
+  label?: string;
+}
+
+const { class: className, label } = Astro.props;
+const id = `logo-c-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<svg
+  viewBox="0 0 100 100"
+  fill="none"
+  class={className}
+  role={label ? 'img' : undefined}
+  aria-label={label || undefined}
+  aria-hidden={label ? undefined : 'true'}
+>
+  <defs>
+    <linearGradient id={id} x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="var(--color-brand-500)"></stop>
+      <stop offset="0.6" stop-color="var(--color-brand-700)"></stop>
+      <stop offset="1" stop-color="var(--color-accent-500)"></stop>
+    </linearGradient>
+  </defs>
+
+  <!-- Arc « C », ouvert à droite -->
+  <path
+    d="M80.4 21.6A41 41 0 1 0 80.4 78.4"
+    stroke={`url(#${id})`}
+    stroke-width="10"
+    stroke-linecap="round"
+  ></path>
+
+  <!-- Barres de croissance -->
+  <rect x="33" y="54" width="11" height="22" rx="1" fill="var(--color-steel-300)"></rect>
+  <rect x="48" y="44" width="11" height="32" rx="1" fill="var(--color-steel-500)"></rect>
+  <rect x="63" y="32" width="11" height="44" rx="1" fill="var(--color-steel-700)"></rect>
+
+  <!-- Flèche de croissance -->
+  <path
+    d="M28 66l14-11 9 6 22-21"
+    stroke="var(--color-brand-500)"
+    stroke-width="5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  ></path>
+  <path d="M84 29l-3.5 15-11.5-11.5z" fill="var(--color-brand-500)"></path>
+</svg>

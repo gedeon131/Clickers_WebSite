@@ -1,0 +1,36 @@
+---
+import Button from '../ui/Button.astro';
+import ProjectCard from '../projects/ProjectCard.astro';
+import Section from '../ui/Section.astro';
+import { getLocalizedEntries } from '../../lib/content';
+import { getLangFromUrl, getLocalizedPath, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const projects = (await getLocalizedEntries('projects', lang))
+  .filter(({ entry }) => entry.data.featured)
+  .slice(0, 3);
+---
+
+<Section
+  id="projets"
+  tone="dark"
+  eyebrow={t('home.projects.eyebrow')}
+  title={t('home.projects.title')}
+  intro={t('home.projects.intro')}
+>
+  <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" role="list">
+    {projects.map((item, index) => (
+      <li>
+        <ProjectCard item={item} index={index} tone="dark" />
+      </li>
+    ))}
+  </ul>
+
+  <div class="mt-12">
+    <Button href={getLocalizedPath('projects', lang)} variant="outline-light">
+      {t('home.projects.all')}
+      <span aria-hidden="true">→</span>
+    </Button>
+  </div>
+</Section>

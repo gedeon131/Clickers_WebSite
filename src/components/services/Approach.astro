@@ -1,0 +1,54 @@
+---
+/**
+ * Méthodologie (présentation §5.1) : six étapes, de l'analyse au suivi.
+ */
+import Section from '../ui/Section.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+interface Props {
+  tone?: 'paper' | 'tint';
+}
+
+const { tone = 'tint' } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const steps = ([1, 2, 3, 4, 5, 6] as const).map((n) => ({
+  title: t(`approach.step${n}.title`),
+  text: t(`approach.step${n}.text`),
+}));
+---
+
+<Section
+  id="methode"
+  tone={tone}
+  eyebrow={t('approach.eyebrow')}
+  title={t('approach.title')}
+  intro={t('approach.intro')}
+>
+  <ol class="relative grid gap-5 sm:grid-cols-2 lg:grid-cols-3" role="list">
+    {steps.map(({ title, text }, index) => (
+      <li
+        data-reveal
+        class:list={[
+          'group relative flex gap-5 rounded-xl border p-6 transition-colors md:p-7',
+          tone === 'tint'
+            ? 'border-transparent bg-white hover:border-brand-500/30'
+            : 'border-brand-100 bg-brand-100/40 hover:border-brand-500/30 hover:bg-white',
+        ]}
+        style={`transition-delay: ${index * 60}ms`}
+      >
+        <span
+          class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-brand-700 to-accent-500 font-mono text-base font-medium text-white shadow-md shadow-brand-700/25"
+          aria-hidden="true"
+        >
+          {String(index + 1).padStart(2, '0')}
+        </span>
+        <div>
+          <h3 class="text-lg">{title}</h3>
+          <p class="mt-2 text-muted">{text}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+</Section>

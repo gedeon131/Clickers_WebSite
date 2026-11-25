@@ -1,0 +1,62 @@
+---
+/**
+ * « Une expertise technique diversifiée » (présentation §4.3) : îlot React à onglets.
+ */
+import TechStack from '../react/TechStack';
+import NetworkPattern from '../ui/NetworkPattern.astro';
+import Section from '../ui/Section.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const categories = [
+  { id: 'languages', label: t('tech.languages'), items: ['Python', 'JavaScript', 'PHP', 'R', 'SQL'] },
+  {
+    id: 'frameworks',
+    label: t('tech.frameworks'),
+    items: ['React', 'Node.js', 'Django', 'Flask', 'SQLAlchemy', 'Bootstrap'],
+  },
+  {
+    id: 'databases',
+    label: t('tech.databases'),
+    items: ['MySQL', 'PostgreSQL', 'SQLite', 'MongoDB', 'Oracle'],
+  },
+  {
+    id: 'tools',
+    label: t('tech.tools'),
+    items: [
+      'GitHub',
+      'Docker',
+      'Power BI',
+      'Tableau',
+      'QGIS',
+      'Google Cloud',
+      'Swagger',
+      'VS Code',
+    ],
+  },
+  {
+    id: 'methods',
+    label: t('tech.methods'),
+    items:
+      lang === 'fr'
+        ? ['Intégration continue', 'Cloud Azure', 'Cloud AWS', 'API REST', 'Méthode agile']
+        : ['Continuous integration', 'Azure cloud', 'AWS cloud', 'REST APIs', 'Agile method'],
+  },
+];
+---
+
+<Section
+  id="technologies"
+  tone="dark"
+  eyebrow={t('tech.eyebrow')}
+  title={t('tech.title')}
+  intro={t('tech.intro')}
+  class="relative isolate overflow-hidden"
+>
+  <NetworkPattern
+    class="pointer-events-none absolute -top-24 -right-24 -z-10 size-[30rem] text-brand-300 opacity-[0.08]"
+  />
+  <TechStack client:visible label={t('tech.tabsLabel')} categories={categories} />
+</Section>

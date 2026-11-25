@@ -1,0 +1,66 @@
+---
+/**
+ * Icônes des réseaux sociaux. Les réseaux sans lien (à fournir par le client)
+ * sont affichés atténués avec la mention « bientôt », sans lien.
+ */
+import { socialLinks, type SocialNetwork } from '../../config/site';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const icons: Record<SocialNetwork, string> = {
+  facebook:
+    'M14 8h2.5V4.5H14A4 4 0 0 0 10 8.5V11H7.5v3.5H10V21h3.5v-6.5H16l.5-3.5h-3V8.8c0-.5.2-.8.5-.8z',
+  linkedin:
+    'M4 9h3.5v11H4zM5.75 3.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM10 9h3.3v1.6c.5-.9 1.7-1.9 3.5-1.9 3.6 0 4.2 2.3 4.2 5.4V20h-3.5v-5.2c0-1.3 0-2.9-1.8-2.9s-2.1 1.4-2.1 2.8V20H10z',
+  instagram:
+    'M8 3h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5zm4 5a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm5.2-2.4a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z',
+  tiktok:
+    'M14 3h3c.2 1.8 1.4 3.3 3.5 3.5v3c-1.3 0-2.5-.4-3.5-1v6.3A5.8 5.8 0 1 1 11.2 9v3.1a2.8 2.8 0 1 0 2.8 2.8z',
+  youtube:
+    'M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.3 5 12 5 12 5s-6.3 0-7.8.4a2.5 2.5 0 0 0-1.8 1.8C2 8.7 2 12 2 12s0 3.3.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.7 19 12 19 12 19s6.3 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.4-1.5.4-4.8.4-4.8s0-3.3-.4-4.8zM10 15V9l5.2 3z',
+};
+
+const base =
+  'flex size-10 items-center justify-center rounded-full border transition-colors';
+---
+
+<ul class:list={['flex flex-wrap gap-3', className]} role="list">
+  {socialLinks.map(({ network, name, href }) => (
+    <li>
+      {href ? (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={name}
+          title={name}
+          class:list={[
+            base,
+            'border-brand-300/40 text-brand-100 hover:border-accent-300 hover:bg-accent-500/20 hover:text-white',
+          ]}
+        >
+          <svg class="size-[1.1rem]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d={icons[network]} fill-rule="evenodd" />
+          </svg>
+        </a>
+      ) : (
+        <span
+          title={`${name} : ${t('social.soonLabel')}`}
+          class:list={[base, 'relative border-dashed border-brand-300/25 text-brand-100/35']}
+        >
+          <svg class="size-[1.1rem]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d={icons[network]} fill-rule="evenodd" />
+          </svg>
+          <span class="sr-only">{`${name} (${t('social.soonLabel')})`}</span>
+        </span>
+      )}
+    </li>
+  ))}
+</ul>

@@ -1,0 +1,38 @@
+---
+/**
+ * Page Projets, partagée par /projets et /en/projects.
+ */
+import ProjectCard from './ProjectCard.astro';
+import Markets from '../home/Markets.astro';
+import CallToAction from '../ui/CallToAction.astro';
+import PageHeader from '../ui/PageHeader.astro';
+import Section from '../ui/Section.astro';
+import { getLocalizedEntries } from '../../lib/content';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const projects = await getLocalizedEntries('projects', lang);
+---
+
+<PageHeader
+  eyebrow={t('projects.eyebrow')}
+  title={t('projects.heading')}
+  intro={t('projects.intro')}
+  breadcrumbs={[{ label: t('projects.title') }]}
+/>
+
+<Section id="realisations" tone="paper" eyebrow={t('projects.list.eyebrow')} title={t('projects.list.title')}>
+  <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" role="list">
+    {projects.map((item, index) => (
+      <li>
+        <ProjectCard item={item} index={index} />
+      </li>
+    ))}
+  </ul>
+  <!-- TODO(client): ajouter captures d'écran et logos partenaires quand ils seront disponibles -->
+</Section>
+
+<Markets />
+
+<CallToAction />

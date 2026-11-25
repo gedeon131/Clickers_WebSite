@@ -1,0 +1,105 @@
+---
+/**
+ * Carte projet : statut, secteur, titre, résumé et étiquettes.
+ */
+import type { LocalizedEntry } from '../../lib/content';
+import { getLangFromUrl, useTranslations, type UiKey } from '../../i18n/utils';
+
+interface Props {
+  item: LocalizedEntry<'projects'>;
+  index: number;
+  tone?: 'light' | 'dark';
+  /** Mise en avant (carte large). */
+  large?: boolean;
+}
+
+const { item, index, tone = 'light', large = false } = Astro.props;
+const { entry, fallback } = item;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const dark = tone === 'dark';
+const status = entry.data.status;
+
+const statusClass = {
+  preparation: dark
+    ? 'border-accent-300/40 text-accent-300'
+    : 'border-accent-700/30 bg-accent-500/10 text-accent-700',
+  development: dark
+    ? 'border-brand-300/40 text-brand-300'
+    : 'border-brand-700/30 bg-brand-100 text-brand-700',
+  delivered: dark ? 'border-success-300/40 text-success-300' : 'border-success-700/30 bg-success-100 text-success-700',
+};
+---
+
+<article
+  data-reveal
+  lang={fallback ? 'fr' : undefined}
+  class:list={[
+    'group relative flex h-full flex-col overflow-hidden rounded-xl border p-7 transition-all duration-300 hover:-translate-y-1 md:p-8',
+    dark
+      ? 'border-brand-300/15 bg-night-800 hover:border-accent-300/40'
+      : 'border-brand-100 bg-white shadow-sm shadow-night-900/5 hover:shadow-lg hover:shadow-brand-700/10',
+    large && 'md:p-10',
+  ]}
+  style={`transition-delay: ${(index % 3) * 80}ms`}
+>
+  <span
+    class="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-linear-to-r from-brand-500 to-accent-500 transition-transform duration-500 group-hover:scale-x-100"
+    aria-hidden="true"
+  ></span>
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <span class:list={['font-mono text-xs', dark ? 'text-brand-100/50' : 'text-muted']}>
+      {String(index + 1).padStart(2, '0')}
+    </span>
+    <span
+      class:list={[
+        'inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold',
+        statusClass[status],
+      ]}
+    >
+      <span class="size-1.5 rounded-full bg-current" aria-hidden="true"></span>
+      {t(`project.status.${status}` as UiKey)}
+    </span>
+  </div>
+  {(entry.data.sector || entry.data.client) && (
+    <p
+      class:list={[
+        'mt-6 text-xs font-semibold tracking-[0.15em] uppercase',
+        dark ? 'text-accent-300' : 'text-accent-700',
+      ]}
+    >
+      {entry.data.client ?? entry.data.sector}
+    </p>
+  )}
+  <h3
+    class:list={[
+      'mt-3 leading-snug',
+      large ? 'text-2xl md:text-3xl' : 'text-xl',
+      dark && 'text-white',
+    ]}
+  >
+    {entry.data.title}
+  </h3>
+  <p class:list={['mt-4 flex-1', dark ? 'text-brand-100/80' : 'text-muted', large && 'md:text-lg']}>
+    {entry.data.summary}
+  </p>
+  {entry.data.tags.length > 0 && (
+    <ul class="mt-6 flex flex-wrap gap-2" role="list">
+      {entry.data.tags.map((tag) => (
+        <li
+          class:list={[
+            'rounded-md px-2.5 py-1 font-mono text-xs',
+            dark ? 'bg-night-900 text-brand-100/80' : 'bg-brand-100/70 text-brand-700',
+          ]}
+        >
+          {tag}
+        </li>
+      ))}
+    </ul>
+  )}
+  {fallback && (
+    <p lang="fr" class:list={['mt-4 text-xs italic', dark ? 'text-brand-100/60' : 'text-muted']}>
+      {t('content.fallback')}
+    </p>
+  )}
+</article>

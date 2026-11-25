@@ -1,0 +1,126 @@
+---
+/**
+ * Page À propos, partagée par /a-propos et /en/about (présentation §1, §2 et §7).
+ */
+import Strengths from '../home/Strengths.astro';
+import CallToAction from '../ui/CallToAction.astro';
+import IdeaIllustration from '../ui/IdeaIllustration.astro';
+import NetworkPattern from '../ui/NetworkPattern.astro';
+import PageHeader from '../ui/PageHeader.astro';
+import Section from '../ui/Section.astro';
+import { getLangFromUrl, useTranslations, type UiKey } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const values = (['innovation', 'transparency', 'collaboration', 'impact'] as const).map((key) => ({
+  title: t(`value.${key}.title` as UiKey),
+  text: t(`value.${key}.text` as UiKey),
+}));
+
+const eyebrow = 'mb-5 flex items-center gap-3 font-mono text-xs text-accent-700';
+---
+
+<PageHeader
+  eyebrow={t('about.eyebrow')}
+  title={t('about.heading')}
+  intro={t('about.intro')}
+  breadcrumbs={[{ label: t('about.title') }]}
+/>
+
+<!-- Mission et vision -->
+<section class="bg-paper" aria-labelledby="mission-titre">
+  <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 md:px-8 md:py-28 lg:grid-cols-12 lg:gap-16">
+    <div data-reveal class="lg:col-span-7">
+      <p class={eyebrow}><span aria-hidden="true">//</span>{t('about.mission.eyebrow')}</p>
+      <h2 id="mission-titre" class="text-3xl leading-[1.15] md:text-4xl lg:text-5xl">
+        {t('about.mission.title')}
+      </h2>
+      <p class="mt-8 text-base text-muted md:text-lg">{t('about.mission.text')}</p>
+      <div class="mt-10 rounded-xl border-l-4 border-accent-500 bg-brand-100/60 p-6">
+        <h3 class="font-mono text-xs text-accent-700">{t('about.vision.title')}</h3>
+        <p class="mt-3 font-display text-xl leading-snug text-brand-700 md:text-2xl">
+          {t('about.vision.text')}
+        </p>
+      </div>
+    </div>
+    <div data-reveal class="lg:col-span-5">
+      <div class="rounded-2xl bg-linear-to-br from-brand-100 to-white p-8 md:p-12">
+        <IdeaIllustration class="mx-auto w-full max-w-sm" label={t('about.illustrationAlt')} />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pourquoi Clickers Community, philosophie -->
+<section class="relative isolate overflow-hidden bg-night-900 text-brand-100" aria-labelledby="histoire-titre">
+  <NetworkPattern class="pointer-events-none absolute -bottom-32 -left-24 -z-10 size-[30rem] text-brand-300 opacity-[0.08]" />
+  <div class="mx-auto grid max-w-7xl gap-12 px-4 py-20 md:px-8 md:py-28 lg:grid-cols-12 lg:gap-16">
+    <div data-reveal class="lg:col-span-6">
+      <p class="mb-5 flex items-center gap-3 font-mono text-xs text-accent-300">
+        <span aria-hidden="true">//</span>{t('about.story.eyebrow')}
+      </p>
+      <h2 id="histoire-titre" class="text-3xl leading-[1.15] text-white md:text-4xl">
+        {t('about.story.title')}
+      </h2>
+      <p class="mt-8 text-brand-100/85 md:text-lg">{t('about.story.text1')}</p>
+      <p class="mt-5 text-brand-100/85 md:text-lg">{t('about.story.text2')}</p>
+    </div>
+    <figure data-reveal class="self-center lg:col-span-6">
+      <blockquote class="font-display text-2xl leading-snug text-white md:text-3xl">
+        <span class="text-gradient text-5xl leading-none" aria-hidden="true">“</span>
+        {t('about.story.quote')}
+      </blockquote>
+      <figcaption class="mt-6 font-mono text-sm text-accent-300">— {t('about.story.quoteSource')}</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- Valeurs -->
+<Section
+  id="valeurs"
+  tone="paper"
+  eyebrow={t('about.values.eyebrow')}
+  title={t('about.values.title')}
+  intro={t('about.values.intro')}
+>
+  <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4" role="list">
+    {values.map(({ title, text }, index) => (
+      <li
+        data-reveal
+        class="group rounded-xl border border-brand-100 bg-white p-7 shadow-sm shadow-night-900/5 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-brand-700/10"
+        style={`transition-delay: ${index * 80}ms`}
+      >
+        <span class="font-mono text-sm text-accent-700">{String(index + 1).padStart(2, '0')}</span>
+        <h3 class="mt-4 text-2xl">{title}</h3>
+        <span class="mt-4 block h-1 w-10 rounded-full bg-linear-to-r from-brand-700 to-accent-500 transition-all group-hover:w-16" aria-hidden="true"></span>
+        <p class="mt-4 text-muted">{text}</p>
+      </li>
+    ))}
+  </ul>
+</Section>
+
+<!-- Perspectives -->
+<Section
+  id="perspectives"
+  tone="tint"
+  eyebrow={t('about.future.eyebrow')}
+  title={t('about.future.title')}
+  intro={t('about.future.intro')}
+>
+  <div class="grid gap-6 md:grid-cols-2">
+    {(['horizon', 'ecosystem'] as const).map((key) => (
+      <article data-reveal class="rounded-xl bg-white p-8 md:p-10">
+        <h3 class="text-2xl">{t(`about.future.${key}.title`)}</h3>
+        <p class="mt-4 text-muted md:text-lg">{t(`about.future.${key}.text`)}</p>
+      </article>
+    ))}
+  </div>
+  <p data-reveal class="mt-12 text-center font-display text-2xl text-brand-700 md:text-3xl">
+    {t('about.future.closing')}
+  </p>
+</Section>
+
+<Strengths />
+
+<CallToAction />

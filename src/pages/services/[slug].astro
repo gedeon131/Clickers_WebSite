@@ -1,0 +1,27 @@
+---
+import ServiceDetail from '../../components/services/ServiceDetail.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getLocalizedEntries, type LocalizedEntry } from '../../lib/content';
+import { useTranslations } from '../../i18n/utils';
+
+export async function getStaticPaths() {
+  const services = await getLocalizedEntries('services', 'fr');
+  return services.map((item) => ({ params: { slug: item.slug }, props: { item } }));
+}
+
+interface Props {
+  item: LocalizedEntry<'services'>;
+}
+
+const { item } = Astro.props;
+const t = useTranslations('fr');
+const whatsappMessage = t('whatsapp.messageService').replace('{service}', item.entry.data.title);
+---
+
+<BaseLayout
+  title={item.entry.data.title}
+  description={item.entry.data.summary}
+  whatsappMessage={whatsappMessage}
+>
+  <ServiceDetail item={item} />
+</BaseLayout>

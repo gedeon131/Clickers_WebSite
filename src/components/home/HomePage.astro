@@ -1,0 +1,22 @@
+---
+/**
+ * Contenu de la page d'accueil, partagé par / et /en/ (la langue vient de l'URL).
+ */
+import Approach from '../services/Approach.astro';
+import CallToAction from '../ui/CallToAction.astro';
+import FeaturedProjects from './FeaturedProjects.astro';
+import FeaturedServices from './FeaturedServices.astro';
+import Hero from './Hero.astro';
+import Markets from './Markets.astro';
+import Strengths from './Strengths.astro';
+import TechSection from './TechSection.astro';
+---
+
+<Hero />
+<Strengths />
+<FeaturedServices />
+<Approach tone="paper" />
+<TechSection />
+<Markets />
+<FeaturedProjects />
+<CallToAction />

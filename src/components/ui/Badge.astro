@@ -1,0 +1,21 @@
+---
+interface Props {
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+
+const { tone = 'light', class: className } = Astro.props;
+---
+
+<span
+  class:list={[
+    'inline-flex items-center rounded-sm border px-2 py-0.5 text-[0.6875rem] font-semibold tracking-[0.15em] uppercase',
+    // Fond paper explicite : l'or foncé garde un contraste AA même posé sur une section bleu clair
+    tone === 'light'
+      ? 'border-accent-700/40 bg-paper text-accent-700'
+      : 'border-accent-300/40 text-accent-300',
+    className,
+  ]}
+>
+  <slot />
+</span>
